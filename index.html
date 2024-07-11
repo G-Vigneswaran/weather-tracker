@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather api</title>
+  <style>
+    body{
+      background-color: rgb(169, 93, 240);
+      margin: 0;
+    }
+    .heading{
+      margin-left: 35%;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      font-size: 30px;
+    }
+    .main-div{
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .input-field{
+      margin-right: 2px;
+      padding: 5px;
+      height: 20px;
+      width: 250px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 15px;
+    }
+    .search-button{
+      border: none;
+      padding: 7px;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: rgb(38, 38, 215);
+      color: white;
+    }
+    .details{
+      display: flex;
+      flex-direction: row;
+      flex: 1 1fr 1fr;
+      justify-content: center;
+      column-gap: 5px;
+      margin-top: 50px;
+      width: 100%;
+    }
+    .sub-div{
+      background-color: yellow;
+      width: 200px;
+      height: 200px;
+      text-align: center;
+
+    }
+    .sub-div div{
+      margin-top: 10px;
+    }
+    .sub-div-img{
+      margin: 5px;
+      width: 190px;
+      height: 120px;
+    }
+    .temp-div{
+      background-color: rgb(255, 185, 56);
+    }
+    .wind-div{
+      background-color: skyblue;
+    }
+    .overall-div{
+      background-color: darksalmon;
+    }
+    .break{
+      display: inline;
+      width: 200%;
+    }
+  </style>
+</head>
+<body>
+  <p class="heading">Track Wheather</p> 
+  <div class="main-div">
+    
+    <input type="text" placeholder="Enter city" class="input-field js-input-field">
+    <button class="search-button js-search-button">Search</button>
+    <div class="break"></div>
+    <div class="details">
+      <div class="temp-div js-temp-div">
+        
+      </div>
+      <div class="wind-div js-wind-div">
+        
+      
+      </div>
+      <div class="overall-div js-overall-div">
+        
+      </div>
+  </div>
+  
+  <script>
+    const key='3f3301c5c14ab2dbf53606a355605a14';
+
+    document.querySelector('.js-search-button').addEventListener( 'click',()=>{
+      console.log('clicked');
+      const tempElem=document.querySelector('.js-temp-div');
+      const windElem=document.querySelector('.js-wind-div');
+      const overallElem=document.querySelector('.js-overall-div');
+      const city=document.querySelector('.js-input-field').value;
+      document.querySelector('.js-input-field').value='';
+      let temp;
+      let wind;
+      let windDir;
+      let overall;
+      let srcImg;
+      
+      const weatherUrl=`http://api.weatherapi.com/v1/current.json?key=e6486554e47e4cf1825150323241007&q=${city}&aqi=${key}`;
+      fetch(weatherUrl)
+      .then( (res) =>{ return res.json() })
+      .then( data =>{
+        console.log(data);
+        temp=data.current.temp_c;
+        wind=data.current.wind_mph;
+        windDir=data.current.wind_dir;
+        overall=data.current.condition.text;
+        srcImg=data.current.condition.icon;
+
+
+        let tempHtml=`
+        <img src="images/temp.jpeg" class="sub-div-img">
+        <div>${temp} &#176; C</div>
+        `;
+        let windHtml=`
+          <img src="images/wind.png" class="sub-div-img">
+          <div>${wind} mph , Dir:${windDir}</div>
+        `;
+        let overallHtml=`
+          <img src="${srcImg}" class="sub-div-img">
+          <div>${overall}</div>
+        `;
+
+        tempElem.classList.add('sub-div');
+        windElem.classList.add('sub-div');
+        overallElem.classList.add('sub-div');
+        tempElem.innerHTML=tempHtml;
+        windElem.innerHTML=windHtml;
+        overallElem.innerHTML=overallHtml;
+
+      });
+
+      
+
+    });
+  </script>
+</body>
+</html>
